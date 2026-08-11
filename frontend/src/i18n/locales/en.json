@@ -1,0 +1,22 @@
+{
+  "dashboard": "Dashboard",
+  "addActivity": "Add Activity",
+  "activityHistory": "Activity History",
+  "analytics": "Analytics",
+  "recommendations": "Recommendations",
+  "goalTracking": "Goal Tracking",
+  "rewards": "Rewards",
+  "leaderboard": "Leaderboard",
+  "support": "Support",
+  "profile": "Profile",
+  "settings": "Settings",
+  "logout": "Logout",
+  "userPanel": "User Panel",
+  "adminPanel": "Admin Panel",
+  "todayCO2": "Today's CO₂",
+  "ecoPoints": "Eco Points",
+  "currentStreak": "Current Streak",
+  "goalProgress": "Goal Progress",
+  "recentActivities": "Recent Activities",
+  "ecoTips": "Eco Tips"
+}
