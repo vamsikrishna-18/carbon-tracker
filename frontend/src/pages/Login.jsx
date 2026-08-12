@@ -255,8 +255,10 @@ function Login() {
   const handleGoogleLogin = () => {
     console.log("Starting Google Login...");
 
+    // Use standard Spring Security OAuth2 authorization endpoint
+    const baseUrl = API_BASE_URL.replace('/api', '');
     window.location.href =
-      `${API_BASE_URL}/oauth2/authorization/google`;
+      `${baseUrl}/oauth2/authorization/google`;
   };
 
   // ============================================================
