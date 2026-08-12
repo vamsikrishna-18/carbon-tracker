@@ -22,7 +22,7 @@ import {
   markNotificationAsRead,
 } from "../../services/notificationService";
 
-function UserNavbar() {
+function UserNavbar({ onMenuClick }) {
   const navigate = useNavigate();
 
   const [user, setUser] = useState(() => {
@@ -183,25 +183,39 @@ function UserNavbar() {
         dark:bg-gray-900
         text-gray-900
         dark:text-white
-        shadow
-        px-8
-        py-4
+        shadow-md
+        px-3
+        sm:px-4
+        md:px-6
+        lg:px-8
+        py-2.5
+        sm:py-3
+        md:py-4
         flex
         justify-between
         items-center
+        gap-2
+        sm:gap-3
+        md:gap-4
+        lg:gap-6
+        min-h-16
+        sm:min-h-20
       "
     >
       {/* ======================================================
-          SEARCH
+          SEARCH - HIDE ON MOBILE
       ====================================================== */}
 
-      <div className="relative w-96">
+      <div className="relative hidden md:block flex-1 max-w-md">
         <Search
           className="
             absolute
             left-3
-            top-3
+            top-1/2
+            -translate-y-1/2
             text-gray-500
+            w-5
+            h-5
           "
           size={18}
         />
@@ -218,11 +232,12 @@ function UserNavbar() {
             pl-10
             pr-4
             py-2
-            border
+            text-sm
+            border-2
             rounded-lg
             bg-white
             dark:bg-gray-800
-            border-gray-300
+            border-gray-200
             dark:border-gray-700
             text-gray-900
             dark:text-white
@@ -234,10 +249,10 @@ function UserNavbar() {
       </div>
 
       {/* ======================================================
-          RIGHT SIDE
+          RIGHT SIDE - RESPONSIVE GAP
       ====================================================== */}
 
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-2 sm:gap-3 md:gap-4 lg:gap-6">
 
         {/* LANGUAGE */}
 
