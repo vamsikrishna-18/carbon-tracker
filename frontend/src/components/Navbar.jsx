@@ -8,8 +8,10 @@ function Navbar() {
       className="
         w-full
         bg-white
+        dark:bg-gray-900
         border-b
         border-gray-200
+        dark:border-gray-700
         shadow-sm
         relative
         z-50
@@ -19,12 +21,15 @@ function Navbar() {
         className="
           max-w-7xl
           mx-auto
-          h-20
-          px-6
+          h-16
+          sm:h-20
+          px-4
+          sm:px-6
           flex
           items-center
           justify-between
-          gap-6
+          gap-3
+          sm:gap-6
         "
       >
 
@@ -37,32 +42,41 @@ function Navbar() {
           className="
             flex
             items-center
-            gap-3
+            gap-2
+            sm:gap-3
             flex-shrink-0
           "
         >
           <div
             className="
-              w-12
-              h-12
-              rounded-xl
+              w-10
+              sm:w-12
+              h-10
+              sm:h-12
+              rounded-lg
+              sm:rounded-xl
               bg-green-100
+              dark:bg-green-900/40
               flex
               items-center
               justify-center
+              flex-shrink-0
             "
           >
             <Leaf
-              size={30}
-              className="text-green-600"
+              size={24}
+              className="text-green-600 dark:text-green-400 sm:w-7 sm:h-7"
             />
           </div>
 
           <span
             className="
-              text-3xl
+              text-lg
+              sm:text-2xl
+              lg:text-3xl
               font-bold
               text-green-600
+              dark:text-green-400
               whitespace-nowrap
             "
           >

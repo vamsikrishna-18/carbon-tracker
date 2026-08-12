@@ -8,7 +8,11 @@ export default {
   ],
 
   theme: {
-    extend: {},
+    extend: {
+      spacing: {
+        'safe': 'max(1rem, env(safe-area-inset-bottom))',
+      },
+    },
   },
 
   plugins: [],

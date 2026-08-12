@@ -74,10 +74,13 @@ function MainLayout({ children }) {
           className="
             max-w-[1450px]
             mx-auto
-            px-6
+            px-4
+            sm:px-6
             lg:px-10
 
-            h-[88px]
+            h-16
+            sm:h-20
+            lg:h-24
 
             flex
             items-center
@@ -94,16 +97,23 @@ function MainLayout({ children }) {
             className="
               flex
               items-center
-              gap-3
+              gap-2
+              sm:gap-3
               flex-shrink-0
             "
           >
 
             <div
               className="
-                w-12
-                h-12
-                rounded-xl
+                w-10
+                sm:w-12
+                lg:w-14
+                h-10
+                sm:h-12
+                lg:h-14
+                rounded-lg
+                sm:rounded-xl
+                lg:rounded-2xl
 
                 flex
                 items-center
@@ -119,14 +129,16 @@ function MainLayout({ children }) {
               "
             >
               <Leaf
-                size={27}
+                size={24}
                 strokeWidth={2.5}
+                className="sm:w-7 sm:h-7 lg:w-8 lg:h-8"
               />
             </div>
 
             <span
               className="
-                text-2xl
+                text-lg
+                sm:text-2xl
                 lg:text-3xl
                 font-extrabold
                 tracking-tight
