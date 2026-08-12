@@ -167,24 +167,25 @@ function Login() {
         return;
       }
       if (loggedInUser.role === "ORGANIZATION") {
-  console.log("ORGANIZATION LOGIN SUCCESS");
+        console.log("ORGANIZATION LOGIN SUCCESS");
 
-  localStorage.setItem(
-    "organization",
-    JSON.stringify(loggedInUser)
-  );
+        localStorage.setItem(
+          "organization",
+          JSON.stringify(loggedInUser)
+        );
 
-  localStorage.setItem(
-    "user",
-    JSON.stringify(loggedInUser)
-  );
+        localStorage.setItem(
+          "user",
+          JSON.stringify(loggedInUser)
+        );
 
-  navigate("/organization/dashboard", {
-    replace: true,
-  });
+        navigate("/organization/dashboard", {
+          replace: true,
+        });
 
-  return;
-}
+        return;
+      }
+
       // --------------------------------------------------------
       // UNKNOWN ROLE
       // --------------------------------------------------------
@@ -268,9 +269,11 @@ function Login() {
   return (
     <div
       className="
-        min-h-screen
+        min-h-[100dvh]
         w-full
         flex
+        flex-col
+        lg:flex-row
         bg-gray-50
         dark:bg-gray-950
         transition-colors
@@ -279,7 +282,84 @@ function Login() {
     >
 
       {/* ======================================================
-          LEFT SECTION
+          MOBILE / TABLET BRAND BAR (hidden on lg+)
+      ====================================================== */}
+
+      <div
+        className="
+          lg:hidden
+          relative
+          overflow-hidden
+          bg-gradient-to-br
+          from-green-700
+          to-green-900
+          dark:from-gray-900
+          dark:to-black
+          px-5
+          py-5
+          sm:px-8
+          sm:py-6
+          flex
+          items-center
+          justify-between
+          gap-3
+        "
+      >
+        {/* decorative pattern */}
+        <svg
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full opacity-[0.08] pointer-events-none"
+          viewBox="0 0 400 120"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <circle cx="30" cy="20" r="60" fill="white" />
+          <circle cx="370" cy="100" r="70" fill="white" />
+        </svg>
+
+        <div className="relative flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 sm:w-11 sm:h-11 flex-shrink-0 rounded-xl bg-white/15 flex items-center justify-center">
+            <Leaf size={22} className="text-green-200" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-white font-black text-lg sm:text-xl leading-tight truncate">
+              Carbon Tracker
+            </p>
+            <p className="text-green-200 text-xs sm:text-sm truncate">
+              Build a greener future 🌱
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={toggleTheme}
+          aria-label="Toggle theme"
+          title="Toggle Theme"
+          className="
+            relative
+            flex-shrink-0
+            w-10
+            h-10
+            rounded-full
+            bg-white/15
+            text-white
+            flex
+            items-center
+            justify-center
+            active:scale-95
+            transition
+            focus:outline-none
+            focus-visible:ring-2
+            focus-visible:ring-white
+          "
+        >
+          {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+        </button>
+      </div>
+
+
+      {/* ======================================================
+          LEFT SECTION (desktop only)
       ====================================================== */}
 
       <div
@@ -287,104 +367,120 @@ function Login() {
           hidden
           lg:flex
           lg:w-1/2
+          relative
+          overflow-hidden
           bg-gradient-to-br
           from-green-700
           to-green-900
           dark:from-gray-900
           dark:to-black
           text-white
-          p-16
+          px-10
+          xl:px-16
+          py-16
           flex-col
           justify-center
         "
       >
 
-        <Leaf
-          size={70}
-          className="text-green-300"
-        />
+        {/* decorative pattern (signature element) */}
+        <svg
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full opacity-[0.06] pointer-events-none"
+          viewBox="0 0 600 800"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <circle cx="60" cy="80" r="140" fill="white" />
+          <circle cx="560" cy="260" r="200" fill="white" />
+          <circle cx="120" cy="680" r="160" fill="white" />
+          <circle cx="520" cy="740" r="90" fill="white" />
+        </svg>
 
-        <h1 className="text-5xl font-black mt-8">
-          Carbon Tracker
-        </h1>
+        <div className="relative">
+          <Leaf size={64} className="text-green-300 xl:w-[70px] xl:h-[70px]" />
 
-        <h2 className="text-3xl font-bold mt-5">
-          Build a Greener Future 🌱
-        </h2>
+          <h1 className="text-4xl xl:text-5xl font-black mt-8 leading-tight">
+            Carbon Tracker
+          </h1>
 
-        <p className="mt-6 text-lg text-green-100 max-w-xl">
-          A smart sustainability platform that helps you
-          monitor your carbon footprint, analyze your
-          environmental impact and build eco-friendly habits.
-        </p>
+          <h2 className="text-2xl xl:text-3xl font-bold mt-4">
+            Build a Greener Future 🌱
+          </h2>
 
-        <div className="mt-10 space-y-5">
+          <p className="mt-6 text-base xl:text-lg text-green-100 max-w-xl">
+            A smart sustainability platform that helps you
+            monitor your carbon footprint, analyze your
+            environmental impact and build eco-friendly habits.
+          </p>
 
-          {/* Track */}
+          <div className="mt-10 space-y-5">
 
-          <div className="flex items-center gap-4">
+            {/* Track */}
 
-            <div className="bg-white/15 p-3 rounded-xl">
-              <BarChart3 />
+            <div className="flex items-center gap-4">
+
+              <div className="bg-white/15 p-3 rounded-xl flex-shrink-0">
+                <BarChart3 />
+              </div>
+
+              <div>
+                <h3 className="font-bold text-lg">
+                  Track Your Impact
+                </h3>
+
+                <p className="text-green-100 text-sm">
+                  Monitor your daily carbon emissions.
+                </p>
+              </div>
+
             </div>
 
-            <div>
-              <h3 className="font-bold text-lg">
-                Track Your Impact
-              </h3>
+            {/* Rewards */}
 
-              <p className="text-green-100 text-sm">
-                Monitor your daily carbon emissions.
-              </p>
+            <div className="flex items-center gap-4">
+
+              <div className="bg-white/15 p-3 rounded-xl flex-shrink-0">
+                <Trophy />
+              </div>
+
+              <div>
+                <h3 className="font-bold text-lg">
+                  Earn Rewards
+                </h3>
+
+                <p className="text-green-100 text-sm">
+                  Complete eco-friendly activities and goals.
+                </p>
+              </div>
+
+            </div>
+
+            {/* Protect */}
+
+            <div className="flex items-center gap-4">
+
+              <div className="bg-white/15 p-3 rounded-xl flex-shrink-0">
+                <Globe2 />
+              </div>
+
+              <div>
+                <h3 className="font-bold text-lg">
+                  Protect Tomorrow
+                </h3>
+
+                <p className="text-green-100 text-sm">
+                  Make sustainable choices every day.
+                </p>
+              </div>
+
             </div>
 
           </div>
 
-          {/* Rewards */}
-
-          <div className="flex items-center gap-4">
-
-            <div className="bg-white/15 p-3 rounded-xl">
-              <Trophy />
-            </div>
-
-            <div>
-              <h3 className="font-bold text-lg">
-                Earn Rewards
-              </h3>
-
-              <p className="text-green-100 text-sm">
-                Complete eco-friendly activities and goals.
-              </p>
-            </div>
-
-          </div>
-
-          {/* Protect */}
-
-          <div className="flex items-center gap-4">
-
-            <div className="bg-white/15 p-3 rounded-xl">
-              <Globe2 />
-            </div>
-
-            <div>
-              <h3 className="font-bold text-lg">
-                Protect Tomorrow
-              </h3>
-
-              <p className="text-green-100 text-sm">
-                Make sustainable choices every day.
-              </p>
-            </div>
-
-          </div>
-
+          <p className="mt-12 italic text-green-100 text-base xl:text-lg">
+            "Small actions today create a sustainable future 🌱"
+          </p>
         </div>
-
-        <p className="mt-12 italic text-green-100 text-lg">
-          "Small actions today create a sustainable future 🌱"
-        </p>
 
       </div>
 
@@ -397,22 +493,29 @@ function Login() {
         className="
           w-full
           lg:w-1/2
+          flex-1
           flex
           items-center
           justify-center
-          p-6
+          px-4
+          py-8
+          sm:px-6
+          sm:py-10
+          lg:p-10
           relative
         "
       >
 
         {/* ====================================================
-            THEME BUTTON
+            THEME BUTTON (desktop only — mobile has its own in the brand bar)
         ==================================================== */}
 
         <button
           type="button"
           onClick={toggleTheme}
           className="
+            hidden
+            lg:flex
             absolute
             top-6
             right-6
@@ -428,6 +531,9 @@ function Login() {
             shadow
             hover:scale-105
             transition
+            focus:outline-none
+            focus-visible:ring-2
+            focus-visible:ring-green-500
           "
           title="Toggle Theme"
         >
@@ -441,13 +547,13 @@ function Login() {
         </button>
 
 
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-md pb-[env(safe-area-inset-bottom)]">
 
           {/* ==================================================
-              LOGO / TITLE
+              LOGO / TITLE (hidden on mobile — brand bar covers it)
           ================================================== */}
 
-          <div className="text-center mb-8">
+          <div className="hidden lg:block text-center mb-8">
 
             <div
               className="
@@ -481,6 +587,16 @@ function Login() {
 
           </div>
 
+          {/* Mobile-only compact title */}
+          <div className="lg:hidden text-center mb-6 mt-1">
+            <h1 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white">
+              Welcome Back
+            </h1>
+            <p className="mt-1.5 text-sm sm:text-base text-gray-500 dark:text-gray-400">
+              Login to continue your green journey
+            </p>
+          </div>
+
 
           {/* ==================================================
               LOGIN CARD
@@ -490,9 +606,12 @@ function Login() {
             className="
               bg-white
               dark:bg-gray-800
-              rounded-3xl
-              shadow-2xl
-              p-8
+              rounded-2xl
+              sm:rounded-3xl
+              shadow-xl
+              sm:shadow-2xl
+              p-5
+              sm:p-8
               border
               border-gray-200
               dark:border-gray-700
@@ -502,6 +621,7 @@ function Login() {
             <form
               onSubmit={handleLogin}
               className="space-y-5"
+              noValidate
             >
 
               {/* ============================================
@@ -515,6 +635,8 @@ function Login() {
                   className="
                     block
                     mb-2
+                    text-sm
+                    sm:text-base
                     font-semibold
                     text-gray-700
                     dark:text-gray-200
@@ -523,21 +645,24 @@ function Login() {
                   Email Address
                 </label>
 
-                <div className="relative">
+                <div className="relative flex items-center">
 
                   <Mail
                     size={20}
                     className="
                       absolute
                       left-4
-                      top-3.5
+                      top-1/2
+                      -translate-y-1/2
                       text-gray-400
+                      pointer-events-none
                     "
                   />
 
                   <input
                     id="email"
                     type="email"
+                    inputMode="email"
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) =>
@@ -551,6 +676,8 @@ function Login() {
                       pl-12
                       pr-4
                       py-3
+                      sm:py-3.5
+                      min-h-[48px]
                       rounded-xl
                       border
                       border-gray-300
@@ -559,10 +686,13 @@ function Login() {
                       dark:bg-gray-900
                       text-gray-900
                       dark:text-white
+                      text-base
                       outline-none
                       focus:ring-2
                       focus:ring-green-500
+                      focus:border-transparent
                       disabled:opacity-60
+                      transition
                     "
                   />
 
@@ -582,6 +712,8 @@ function Login() {
                   className="
                     block
                     mb-2
+                    text-sm
+                    sm:text-base
                     font-semibold
                     text-gray-700
                     dark:text-gray-200
@@ -590,15 +722,17 @@ function Login() {
                   Password
                 </label>
 
-                <div className="relative">
+                <div className="relative flex items-center">
 
                   <Lock
                     size={20}
                     className="
                       absolute
                       left-4
-                      top-3.5
+                      top-1/2
+                      -translate-y-1/2
                       text-gray-400
+                      pointer-events-none
                     "
                   />
 
@@ -622,6 +756,8 @@ function Login() {
                       pl-12
                       pr-12
                       py-3
+                      sm:py-3.5
+                      min-h-[48px]
                       rounded-xl
                       border
                       border-gray-300
@@ -630,10 +766,13 @@ function Login() {
                       dark:bg-gray-900
                       text-gray-900
                       dark:text-white
+                      text-base
                       outline-none
                       focus:ring-2
                       focus:ring-green-500
+                      focus:border-transparent
                       disabled:opacity-60
+                      transition
                     "
                   />
 
@@ -647,12 +786,25 @@ function Login() {
                     disabled={loading}
                     className="
                       absolute
-                      right-4
-                      top-3
+                      right-2
+                      top-1/2
+                      -translate-y-1/2
+                      w-9
+                      h-9
+                      flex
+                      items-center
+                      justify-center
+                      rounded-lg
                       text-gray-500
                       dark:text-gray-400
                       hover:text-gray-700
                       dark:hover:text-gray-200
+                      hover:bg-gray-100
+                      dark:hover:bg-gray-800
+                      transition
+                      focus:outline-none
+                      focus-visible:ring-2
+                      focus-visible:ring-green-500
                     "
                     aria-label={
                       showPassword
@@ -662,9 +814,9 @@ function Login() {
                   >
 
                     {showPassword ? (
-                      <EyeOff size={20} />
+                      <EyeOff size={19} />
                     ) : (
-                      <Eye size={20} />
+                      <Eye size={19} />
                     )}
 
                   </button>
@@ -683,12 +835,15 @@ function Login() {
                 disabled={loading}
                 className="
                   w-full
+                  min-h-[48px]
                   bg-green-600
                   hover:bg-green-700
                   dark:bg-green-500
                   dark:hover:bg-green-600
+                  active:scale-[0.99]
                   text-white
-                  py-3.5
+                  py-3
+                  sm:py-3.5
                   rounded-xl
                   font-bold
                   flex
@@ -698,6 +853,11 @@ function Login() {
                   transition
                   disabled:opacity-60
                   disabled:cursor-not-allowed
+                  focus:outline-none
+                  focus-visible:ring-2
+                  focus-visible:ring-green-500
+                  focus-visible:ring-offset-2
+                  dark:focus-visible:ring-offset-gray-800
                 "
               >
 
@@ -733,14 +893,16 @@ function Login() {
                 DIVIDER
             ================================================= */}
 
-            <div className="flex items-center gap-3 my-6">
+            <div className="flex items-center gap-3 my-5 sm:my-6">
 
               <div
+                aria-hidden="true"
                 className="
                   flex-1
-                  h-px
-                  bg-gray-200
-                  dark:bg-gray-700
+                  h-0
+                  border-t
+                  border-gray-200
+                  dark:border-gray-700
                 "
               />
 
@@ -751,17 +913,20 @@ function Login() {
                   uppercase
                   tracking-wide
                   text-gray-400
+                  flex-shrink-0
                 "
               >
                 Or
               </span>
 
               <div
+                aria-hidden="true"
                 className="
                   flex-1
-                  h-px
-                  bg-gray-200
-                  dark:bg-gray-700
+                  h-0
+                  border-t
+                  border-gray-200
+                  dark:border-gray-700
                 "
               />
 
@@ -778,11 +943,13 @@ function Login() {
               disabled={loading}
               className="
                 w-full
+                min-h-[48px]
                 flex
                 items-center
                 justify-center
                 gap-3
-                py-3.5
+                py-3
+                sm:py-3.5
                 rounded-xl
                 border
                 border-gray-300
@@ -791,21 +958,27 @@ function Login() {
                 dark:bg-gray-900
                 text-gray-800
                 dark:text-gray-200
+                text-sm
+                sm:text-base
                 font-semibold
                 hover:bg-gray-50
                 dark:hover:bg-gray-700
+                active:scale-[0.99]
                 transition
                 disabled:opacity-60
                 disabled:cursor-not-allowed
+                focus:outline-none
+                focus-visible:ring-2
+                focus-visible:ring-green-500
               "
             >
 
               {/* Google Icon */}
 
               <svg
-                width="20"
-                height="20"
+                className="w-5 h-5 flex-shrink-0"
                 viewBox="0 0 48 48"
+                aria-hidden="true"
               >
 
                 <path
@@ -849,11 +1022,15 @@ function Login() {
                 block
                 mx-auto
                 mt-5
+                text-sm
+                sm:text-base
                 text-green-600
                 dark:text-green-400
                 font-semibold
                 hover:underline
                 disabled:opacity-50
+                focus:outline-none
+                focus-visible:underline
               "
             >
               Forgot Password?
@@ -870,7 +1047,9 @@ function Login() {
             className="
               text-center
               mt-6
-              text-sm
+              mb-2
+              text-xs
+              sm:text-sm
               text-gray-500
               dark:text-gray-400
             "

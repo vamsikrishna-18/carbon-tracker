@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
   Search,
@@ -37,18 +37,20 @@ function UserNavbar({ onMenuClick }) {
   const [search, setSearch] = useState("");
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
-  const [showNotifications, setShowNotifications] =
-    useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
 
-  const [showProfile, setShowProfile] =
-    useState(false);
-
-  const [notifications, setNotifications] =
-    useState([]);
+  const [notifications, setNotifications] = useState([]);
 
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("theme") === "dark"
   );
+
+  // Refs used to detect outside clicks / taps so dropdowns close
+  // properly on both mobile (touch) and desktop (mouse)
+  const notificationRef = useRef(null);
+  const profileRef = useRef(null);
+  const mobileSearchRef = useRef(null);
 
   // ============================================================
   // LOAD USER
@@ -79,16 +81,11 @@ function UserNavbar({ onMenuClick }) {
     try {
       const response = await getNotifications(user.id);
 
-      const data = Array.isArray(response.data)
-        ? response.data
-        : [];
+      const data = Array.isArray(response.data) ? response.data : [];
 
       setNotifications(data);
     } catch (error) {
-      console.error(
-        "Failed to load user notifications:",
-        error
-      );
+      console.error("Failed to load user notifications:", error);
     }
   };
 
@@ -114,6 +111,58 @@ function UserNavbar({ onMenuClick }) {
   }, [user?.id]);
 
   // ============================================================
+  // CLOSE DROPDOWNS ON OUTSIDE CLICK / TAP / ESCAPE
+  // (fixes menus staying open forever on mobile where there's
+  // no natural "blur" the way there is with a mouse on desktop)
+  // ============================================================
+
+  useEffect(() => {
+    const handlePointerDown = (event) => {
+      if (
+        showNotifications &&
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
+        setShowNotifications(false);
+      }
+
+      if (
+        showProfile &&
+        profileRef.current &&
+        !profileRef.current.contains(event.target)
+      ) {
+        setShowProfile(false);
+      }
+
+      if (
+        mobileSearchOpen &&
+        mobileSearchRef.current &&
+        !mobileSearchRef.current.contains(event.target)
+      ) {
+        setMobileSearchOpen(false);
+      }
+    };
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        setShowNotifications(false);
+        setShowProfile(false);
+        setMobileSearchOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchstart", handlePointerDown);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [showNotifications, showProfile, mobileSearchOpen]);
+
+  // ============================================================
   // UNREAD NOTIFICATIONS
   // ============================================================
 
@@ -122,6 +171,7 @@ function UserNavbar({ onMenuClick }) {
   );
 
   const unreadCount = unreadNotifications.length;
+  const unreadCountLabel = unreadCount > 9 ? "9+" : unreadCount;
 
   // ============================================================
   // MARK NOTIFICATION AS READ
@@ -133,15 +183,10 @@ function UserNavbar({ onMenuClick }) {
 
       // Remove from navbar immediately
       setNotifications((prev) =>
-        prev.filter(
-          (item) => item.id !== notification.id
-        )
+        prev.filter((item) => item.id !== notification.id)
       );
     } catch (error) {
-      console.error(
-        "Failed to mark notification as read:",
-        error
-      );
+      console.error("Failed to mark notification as read:", error);
     }
   };
 
@@ -175,12 +220,37 @@ function UserNavbar({ onMenuClick }) {
   };
 
   // ============================================================
+  // DROPDOWN TOGGLES — each one closes the others so only a
+  // single panel is ever open at once (prevents overlapping
+  // dropdowns colliding on small screens)
+  // ============================================================
+
+  const toggleNotifications = () => {
+    setShowProfile(false);
+    setMobileSearchOpen(false);
+    setShowNotifications((prev) => !prev);
+  };
+
+  const toggleProfile = () => {
+    setShowNotifications(false);
+    setMobileSearchOpen(false);
+    setShowProfile((prev) => !prev);
+  };
+
+  const toggleMobileSearch = () => {
+    setShowNotifications(false);
+    setShowProfile(false);
+    setMobileSearchOpen((prev) => !prev);
+  };
+
+  // ============================================================
   // RETURN
   // ============================================================
 
   return (
     <div
       className="
+        relative
         bg-white
         dark:bg-gray-900
         text-gray-900
@@ -192,9 +262,9 @@ function UserNavbar({ onMenuClick }) {
         sm:pr-4
         md:px-6
         lg:px-8
-        py-2.5
-        sm:py-3
-        md:py-4
+        py-2
+        sm:py-2.5
+        md:py-3
         flex
         justify-between
         items-center
@@ -202,8 +272,8 @@ function UserNavbar({ onMenuClick }) {
         sm:gap-3
         md:gap-4
         lg:gap-6
-        min-h-16
-        sm:min-h-20
+        min-h-14
+        sm:min-h-16
         min-w-0
       "
     >
@@ -231,9 +301,7 @@ function UserNavbar({ onMenuClick }) {
           type="text"
           placeholder="Search..."
           value={search}
-          onChange={(e) =>
-            setSearch(e.target.value)
-          }
+          onChange={(e) => setSearch(e.target.value)}
           className="
             w-full
             pl-10
@@ -256,12 +324,11 @@ function UserNavbar({ onMenuClick }) {
       </div>
 
       {/* ======================================================
-          MOBILE SEARCH TOGGLE (search bar was previously
-          completely inaccessible below lg — this restores it)
+          MOBILE SEARCH TOGGLE
       ====================================================== */}
 
       <button
-        onClick={() => setMobileSearchOpen((prev) => !prev)}
+        onClick={toggleMobileSearch}
         className="
           lg:hidden
           flex-shrink-0
@@ -269,12 +336,14 @@ function UserNavbar({ onMenuClick }) {
           transition
         "
         aria-label="Toggle search"
+        aria-expanded={mobileSearchOpen}
       >
-        {mobileSearchOpen ? <X size={22} /> : <Search size={22} />}
+        {mobileSearchOpen ? <X size={20} /> : <Search size={20} />}
       </button>
 
       {mobileSearchOpen && (
         <div
+          ref={mobileSearchRef}
           className="
             absolute
             left-0
@@ -313,7 +382,7 @@ function UserNavbar({ onMenuClick }) {
               className="
                 w-full
                 pl-10
-                pr-4
+                pr-10
                 py-2.5
                 text-sm
                 border-2
@@ -329,6 +398,23 @@ function UserNavbar({ onMenuClick }) {
                 focus:ring-green-500
               "
             />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="
+                  absolute
+                  right-3
+                  top-1/2
+                  -translate-y-1/2
+                  text-gray-400
+                  hover:text-gray-600
+                  dark:hover:text-gray-200
+                "
+                aria-label="Clear search"
+              >
+                <X size={16} />
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -354,21 +440,20 @@ function UserNavbar({ onMenuClick }) {
             NOTIFICATIONS
         ==================================================== */}
 
-        <div className="relative shrink-0">
+        <div className="relative shrink-0" ref={notificationRef}>
 
           <button
-            onClick={() =>
-              setShowNotifications(
-                !showNotifications
-              )
-            }
+            onClick={toggleNotifications}
             className="
               relative
               hover:text-green-600
               transition
             "
+            aria-label="Notifications"
+            aria-haspopup="true"
+            aria-expanded={showNotifications}
           >
-            <Bell size={22} />
+            <Bell size={20} />
 
             {/* UNREAD COUNT */}
 
@@ -387,29 +472,38 @@ function UserNavbar({ onMenuClick }) {
                   flex
                   items-center
                   justify-center
-                  text-xs
+                  text-[10px]
+                  sm:text-xs
                   font-bold
+                  leading-none
                 "
               >
-                {unreadCount}
+                {unreadCountLabel}
               </span>
             )}
           </button>
 
           {/* ==================================================
-              NOTIFICATION DROPDOWN
+              NOTIFICATION DROPDOWN — fixed on small phones so it
+              can never overflow the viewport, absolute (anchored
+              to the bell) from sm: up
           ================================================== */}
 
           {showNotifications && (
             <div
               className="
-                absolute
-                right-0
-                top-full
-                mt-3
-                w-[380px]
+                fixed
+                sm:absolute
+                left-2
+                right-2
+                sm:left-auto
+                sm:right-0
+                top-16
+                sm:top-full
+                sm:mt-3
+                sm:w-[380px]
                 min-w-0
-                max-w-[calc(100vw-1.5rem)]
+                sm:max-w-[calc(100vw-1.5rem)]
                 bg-white
                 dark:bg-gray-800
                 border
@@ -464,9 +558,7 @@ function UserNavbar({ onMenuClick }) {
 
                 <Link
                   to="/notifications"
-                  onClick={() =>
-                    setShowNotifications(false)
-                  }
+                  onClick={() => setShowNotifications(false)}
                   className="
                     text-xs
                     text-green-600
@@ -483,7 +575,8 @@ function UserNavbar({ onMenuClick }) {
 
               <div
                 className="
-                  max-h-96
+                  max-h-[60vh]
+                  sm:max-h-96
                   overflow-y-auto
                 "
               >
@@ -497,126 +590,93 @@ function UserNavbar({ onMenuClick }) {
                       dark:text-gray-400
                     "
                   >
-                    <Bell
-                      size={32}
-                      className="
-                        mx-auto
-                        mb-3
-                        opacity-40
-                      "
-                    />
+                    <Bell size={32} className="mx-auto mb-3 opacity-40" />
 
-                    <p>
-                      No new notifications
-                    </p>
+                    <p>No new notifications</p>
                   </div>
                 ) : (
-                  unreadNotifications.map(
-                    (notification) => (
-                      <button
-                        key={notification.id}
-                        onClick={() =>
-                          handleNotificationClick(
-                            notification
-                          )
-                        }
-                        className="
-                          w-full
-                          text-left
-                          px-4
-                          py-4
-                          border-b
-                          border-gray-100
-                          dark:border-gray-700
-                          hover:bg-gray-50
-                          dark:hover:bg-gray-700
-                          transition
-                        "
-                      >
-                        <div className="flex gap-3">
+                  unreadNotifications.map((notification) => (
+                    <button
+                      key={notification.id}
+                      onClick={() =>
+                        handleNotificationClick(notification)
+                      }
+                      className="
+                        w-full
+                        text-left
+                        px-4
+                        py-4
+                        border-b
+                        border-gray-100
+                        dark:border-gray-700
+                        hover:bg-gray-50
+                        dark:hover:bg-gray-700
+                        transition
+                      "
+                    >
+                      <div className="flex gap-3">
 
-                          {/* ICON */}
+                        {/* ICON */}
 
-                          <div
-                            className="
-                              flex-shrink-0
-                              w-9
-                              h-9
-                              rounded-full
-                              bg-green-100
-                              dark:bg-green-900/40
-                              text-green-600
-                              dark:text-green-400
-                              flex
-                              items-center
-                              justify-center
-                            "
-                          >
-                            <Bell size={16} />
-                          </div>
-
-                          {/* CONTENT */}
-
-                          <div
-                            className="
-                              min-w-0
-                              flex-1
-                            "
-                          >
-                            <div
-                              className="
-                                flex
-                                justify-between
-                                gap-2
-                              "
-                            >
-                              <h4
-                                className="
-                                  font-semibold
-                                  text-sm
-                                  text-gray-900
-                                  dark:text-white
-                                  truncate
-                                "
-                              >
-                                {notification.title}
-                              </h4>
-
-                              <Check
-                                size={16}
-                                className="
-                                  text-green-600
-                                  flex-shrink-0
-                                "
-                              />
-                            </div>
-
-                            <p
-                              className="
-                                mt-1
-                                text-sm
-                                text-gray-500
-                                dark:text-gray-400
-                                break-words
-                              "
-                            >
-                              {notification.message}
-                            </p>
-
-                            <p
-                              className="
-                                mt-2
-                                text-xs
-                                text-gray-400
-                              "
-                            >
-                              Click to mark as read
-                            </p>
-                          </div>
+                        <div
+                          className="
+                            flex-shrink-0
+                            w-9
+                            h-9
+                            rounded-full
+                            bg-green-100
+                            dark:bg-green-900/40
+                            text-green-600
+                            dark:text-green-400
+                            flex
+                            items-center
+                            justify-center
+                          "
+                        >
+                          <Bell size={16} />
                         </div>
-                      </button>
-                    )
-                  )
+
+                        {/* CONTENT */}
+
+                        <div className="min-w-0 flex-1">
+                          <div className="flex justify-between gap-2">
+                            <h4
+                              className="
+                                font-semibold
+                                text-sm
+                                text-gray-900
+                                dark:text-white
+                                truncate
+                              "
+                            >
+                              {notification.title}
+                            </h4>
+
+                            <Check
+                              size={16}
+                              className="text-green-600 flex-shrink-0"
+                            />
+                          </div>
+
+                          <p
+                            className="
+                              mt-1
+                              text-sm
+                              text-gray-500
+                              dark:text-gray-400
+                              break-words
+                            "
+                          >
+                            {notification.message}
+                          </p>
+
+                          <p className="mt-2 text-xs text-gray-400">
+                            Click to mark as read
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+                  ))
                 )}
               </div>
             </div>
@@ -632,23 +692,17 @@ function UserNavbar({ onMenuClick }) {
           className="hover:text-green-600 transition flex-shrink-0"
           aria-label="Toggle theme"
         >
-          {darkMode ? (
-            <Sun size={22} />
-          ) : (
-            <Moon size={22} />
-          )}
+          {darkMode ? <Sun size={22} /> : <Moon size={22} />}
         </button>
 
         {/* ====================================================
             USER PROFILE
         ==================================================== */}
 
-        <div className="relative min-w-0">
+        <div className="relative min-w-0" ref={profileRef}>
 
           <button
-            onClick={() =>
-              setShowProfile(!showProfile)
-            }
+            onClick={toggleProfile}
             className="
               flex
               items-center
@@ -656,6 +710,9 @@ function UserNavbar({ onMenuClick }) {
               sm:gap-2
               min-w-0
             "
+            aria-label="User menu"
+            aria-haspopup="true"
+            aria-expanded={showProfile}
           >
 
             {/* AVATAR */}
@@ -695,7 +752,10 @@ function UserNavbar({ onMenuClick }) {
               {user?.fullName || "User"}
             </span>
 
-            <ChevronDown size={18} className="hidden sm:block flex-shrink-0" />
+            <ChevronDown
+              size={18}
+              className="hidden sm:block flex-shrink-0"
+            />
           </button>
 
           {/* PROFILE MENU */}
@@ -703,18 +763,24 @@ function UserNavbar({ onMenuClick }) {
           {showProfile && (
             <div
               className="
-                absolute
-                right-0
-                mt-3
-                w-56
+                fixed
+                sm:absolute
+                left-2
+                right-2
+                sm:left-auto
+                sm:right-0
+                top-16
+                sm:top-auto
+                sm:mt-3
                 sm:w-60
-                max-w-[calc(100vw-1.5rem)]
+                min-w-0
+                sm:max-w-[calc(100vw-1.5rem)]
                 bg-white
                 dark:bg-gray-800
                 rounded-xl
                 shadow-xl
                 overflow-hidden
-                z-50
+                z-[9999]
               "
             >
 
@@ -730,9 +796,7 @@ function UserNavbar({ onMenuClick }) {
 
               <Link
                 to="/profile"
-                onClick={() =>
-                  setShowProfile(false)
-                }
+                onClick={() => setShowProfile(false)}
                 className="
                   flex
                   items-center
@@ -744,7 +808,6 @@ function UserNavbar({ onMenuClick }) {
                 "
               >
                 <User size={18} />
-
                 My Profile
               </Link>
 
@@ -752,9 +815,7 @@ function UserNavbar({ onMenuClick }) {
 
               <Link
                 to="/settings"
-                onClick={() =>
-                  setShowProfile(false)
-                }
+                onClick={() => setShowProfile(false)}
                 className="
                   flex
                   items-center
@@ -766,7 +827,6 @@ function UserNavbar({ onMenuClick }) {
                 "
               >
                 <Settings size={18} />
-
                 Settings
               </Link>
 
@@ -788,7 +848,6 @@ function UserNavbar({ onMenuClick }) {
                 "
               >
                 <LogOut size={18} />
-
                 Logout
               </button>
 

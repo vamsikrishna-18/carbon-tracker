@@ -6,7 +6,8 @@ import {
   Lightbulb,
   Gift,
   Trophy,
-  Menu,
+  PanelLeftClose,
+  PanelLeftOpen,
   X,
   LifeBuoy,
   Target,
@@ -28,9 +29,17 @@ const NAV_ITEMS = [
 
 function UserSidebar({ collapsed, setCollapsed, onClose }) {
 
+  // The mobile drawer (onClose is passed by UserLayout only in that
+  // context) already overlays the page and closes itself, so the
+  // "collapsed / icon-only" affordance is a desktop-only space-saving
+  // feature. Forcing it off on mobile keeps labels tappable and
+  // readable instead of showing a cramped icon rail inside a drawer.
+  const isMobileDrawer = Boolean(onClose);
+  const effectiveCollapsed = isMobileDrawer ? false : collapsed;
+
   const menuClass = ({ isActive }) =>
     `flex items-center ${
-      collapsed ? "justify-center" : "gap-3"
+      effectiveCollapsed ? "justify-center" : "gap-3"
     } px-4 sm:px-5 py-3.5 sm:py-4 rounded-lg transition-all duration-300 ${
       isActive
         ? "bg-green-600 text-white shadow-md"
@@ -42,9 +51,11 @@ function UserSidebar({ collapsed, setCollapsed, onClose }) {
 
     <div
       className={`${
-        collapsed ? "w-20" : "w-72"
+        effectiveCollapsed ? "w-20" : "w-72"
       } h-screen
-      max-w-full
+      h-[100dvh]
+      max-w-[85vw]
+      sm:max-w-full
       bg-white dark:bg-gray-900
       border-r border-gray-200 dark:border-gray-700
       text-gray-900 dark:text-white
@@ -71,24 +82,55 @@ function UserSidebar({ collapsed, setCollapsed, onClose }) {
 
         <div className="flex items-center justify-between gap-2">
 
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="
-              p-2
-              rounded-lg
-              text-gray-700
-              dark:text-gray-200
-              hover:bg-green-100
-              dark:hover:bg-green-900/50
-              hover:text-green-600
-              dark:hover:text-green-400
-              transition
-              flex-shrink-0
-            "
-            title="Toggle Sidebar"
-          >
-            <Menu size={22} />
-          </button>
+          {/* COLLAPSE TOGGLE — desktop persistent sidebar only.
+              The mobile drawer has no use for this since it already
+              collapses by closing entirely. */}
+
+          {!isMobileDrawer && (
+            <button
+              onClick={() => setCollapsed(!collapsed)}
+              className="
+                p-2
+                rounded-lg
+                text-gray-700
+                dark:text-gray-200
+                hover:bg-green-100
+                dark:hover:bg-green-900/50
+                hover:text-green-600
+                dark:hover:text-green-400
+                transition
+                flex-shrink-0
+              "
+              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {collapsed ? (
+                <PanelLeftOpen size={22} />
+              ) : (
+                <PanelLeftClose size={22} />
+              )}
+            </button>
+          )}
+
+          {/* App name sits inline with the header row on mobile so
+              the drawer doesn't waste a whole extra line before it */}
+
+          {isMobileDrawer && (
+            <h1
+              className="
+                text-lg
+                font-bold
+                truncate
+                min-w-0
+                flex-1
+                text-gray-900
+                dark:text-white
+              "
+              title="Carbon Tracker"
+            >
+              🌿 Carbon Tracker
+            </h1>
+          )}
 
           {/* MOBILE CLOSE BUTTON — only rendered inside the mobile drawer,
               where UserLayout passes a real onClose handler */}
@@ -97,7 +139,6 @@ function UserSidebar({ collapsed, setCollapsed, onClose }) {
             <button
               onClick={onClose}
               className="
-                lg:hidden
                 p-2
                 rounded-lg
                 text-gray-700
@@ -119,7 +160,10 @@ function UserSidebar({ collapsed, setCollapsed, onClose }) {
         </div>
 
 
-        {!collapsed && (
+        {/* Desktop-only branding block — on mobile the title already
+            lives in the header row above */}
+
+        {!isMobileDrawer && !collapsed && (
 
           <>
 
@@ -159,6 +203,20 @@ function UserSidebar({ collapsed, setCollapsed, onClose }) {
 
         )}
 
+        {isMobileDrawer && (
+          <p
+            className="
+              text-green-600
+              dark:text-green-400
+              text-xs
+              mt-1
+              truncate
+            "
+          >
+            User Panel
+          </p>
+        )}
+
       </div>
 
 
@@ -173,6 +231,7 @@ function UserSidebar({ collapsed, setCollapsed, onClose }) {
           sm:mt-6
           px-2.5
           sm:px-3
+          pb-[max(1rem,env(safe-area-inset-bottom))]
           space-y-1.5
           sm:space-y-2
           overflow-y-auto
@@ -184,12 +243,13 @@ function UserSidebar({ collapsed, setCollapsed, onClose }) {
           <NavLink
             key={to}
             to={to}
+            onClick={isMobileDrawer ? onClose : undefined}
             className={menuClass}
             title={label}
           >
             <Icon size={22} className="flex-shrink-0" />
 
-            {!collapsed && (
+            {!effectiveCollapsed && (
               <span className="whitespace-nowrap truncate text-sm sm:text-base">
                 {label}
               </span>

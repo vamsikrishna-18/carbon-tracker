@@ -29,7 +29,7 @@ function AdminSidebar({
       collapsed
         ? "justify-center"
         : "gap-3"
-    } px-5 py-4 rounded-lg transition-all duration-300 ${
+    } px-4 sm:px-5 py-3 sm:py-3.5 rounded-lg transition-all duration-300 ${
       isActive
         ? "bg-green-600 text-white shadow-md"
         : "text-gray-700 dark:text-gray-200 hover:bg-green-100 dark:hover:bg-green-900/50 hover:text-green-700 dark:hover:text-green-300"
@@ -56,6 +56,7 @@ function AdminSidebar({
           : "w-72"
       }
       h-screen
+      h-[100dvh]
       bg-white dark:bg-gray-900
       border-r border-gray-200 dark:border-gray-700
       text-gray-900 dark:text-white
@@ -71,7 +72,8 @@ function AdminSidebar({
 
       <div
         className="
-          p-5
+          p-4
+          sm:p-5
           border-b
           border-gray-200
           dark:border-gray-700
@@ -84,7 +86,8 @@ function AdminSidebar({
             setCollapsed(!collapsed)
           }
           className="
-            p-2
+            -ml-1.5
+            p-1.5
             rounded-lg
             text-gray-700
             dark:text-gray-200
@@ -93,11 +96,13 @@ function AdminSidebar({
             hover:text-green-600
             dark:hover:text-green-400
             transition
+            leading-none
           "
           title="Toggle Sidebar"
+          aria-label="Toggle Sidebar"
         >
 
-          <Menu size={26} />
+          <Menu size={22} />
 
         </button>
 
@@ -108,13 +113,15 @@ function AdminSidebar({
 
             <h1
               className="
-                text-3xl
+                text-xl
+                sm:text-2xl
                 font-bold
-                mt-4
-                whitespace-nowrap
+                mt-3
+                truncate
                 text-gray-900
                 dark:text-white
               "
+              title="Carbon Tracker"
             >
               🌱 Carbon Tracker
             </h1>
@@ -124,8 +131,10 @@ function AdminSidebar({
               className="
                 text-green-600
                 dark:text-green-400
-                text-sm
-                mt-2
+                text-xs
+                sm:text-sm
+                mt-1
+                truncate
               "
             >
               Admin Panel
@@ -145,10 +154,14 @@ function AdminSidebar({
       <nav
         className="
           flex-1
-          mt-6
-          px-3
-          space-y-2
+          mt-4
+          sm:mt-6
+          px-2.5
+          sm:px-3
+          space-y-1.5
+          sm:space-y-2
           overflow-y-auto
+          overflow-x-hidden
         "
       >
 
@@ -160,10 +173,10 @@ function AdminSidebar({
           title="Dashboard"
         >
 
-          <LayoutDashboard size={25} />
+          <LayoutDashboard size={21} className="flex-shrink-0" />
 
           {!collapsed && (
-            <span className="text-lg whitespace-nowrap">
+            <span className="text-sm sm:text-base truncate">
               Dashboard
             </span>
           )}
@@ -179,10 +192,10 @@ function AdminSidebar({
           title="Analytics"
         >
 
-          <PieChart size={25} />
+          <PieChart size={21} className="flex-shrink-0" />
 
           {!collapsed && (
-            <span className="text-lg whitespace-nowrap">
+            <span className="text-sm sm:text-base truncate">
               Analytics
             </span>
           )}
@@ -198,10 +211,10 @@ function AdminSidebar({
           title="Manage Users"
         >
 
-          <Users size={25} />
+          <Users size={21} className="flex-shrink-0" />
 
           {!collapsed && (
-            <span className="text-lg whitespace-nowrap">
+            <span className="text-sm sm:text-base truncate">
               Manage Users
             </span>
           )}
@@ -217,10 +230,10 @@ function AdminSidebar({
           title="Activity Monitor"
         >
 
-          <Activity size={25} />
+          <Activity size={21} className="flex-shrink-0" />
 
           {!collapsed && (
-            <span className="text-lg whitespace-nowrap">
+            <span className="text-sm sm:text-base truncate">
               Activity Monitor
             </span>
           )}
@@ -236,10 +249,10 @@ function AdminSidebar({
           title="Support Tickets"
         >
 
-          <LifeBuoy size={25} />
+          <LifeBuoy size={21} className="flex-shrink-0" />
 
           {!collapsed && (
-            <span className="text-lg whitespace-nowrap">
+            <span className="text-sm sm:text-base truncate">
               Support Tickets
             </span>
           )}
@@ -255,10 +268,10 @@ function AdminSidebar({
           title="Reports"
         >
 
-          <BarChart3 size={25} />
+          <BarChart3 size={21} className="flex-shrink-0" />
 
           {!collapsed && (
-            <span className="text-lg whitespace-nowrap">
+            <span className="text-sm sm:text-base truncate">
               Reports
             </span>
           )}
@@ -274,10 +287,10 @@ function AdminSidebar({
           title="Announcements"
         >
 
-          <Megaphone size={25} />
+          <Megaphone size={21} className="flex-shrink-0" />
 
           {!collapsed && (
-            <span className="text-lg whitespace-nowrap">
+            <span className="text-sm sm:text-base truncate">
               Announcements
             </span>
           )}
@@ -293,11 +306,13 @@ function AdminSidebar({
 
       <div
         className="
-          p-3
+          p-2.5
+          sm:p-3
           border-t
           border-gray-200
           dark:border-gray-700
           flex-shrink-0
+          pb-[max(0.625rem,env(safe-area-inset-bottom))]
         "
       >
 
@@ -312,8 +327,10 @@ function AdminSidebar({
                 ? "justify-center"
                 : "gap-3"
             }
-            px-5
-            py-4
+            px-4
+            sm:px-5
+            py-3
+            sm:py-3.5
             rounded-lg
             text-gray-700
             dark:text-gray-200
@@ -325,10 +342,10 @@ function AdminSidebar({
           title="Logout"
         >
 
-          <LogOut size={25} />
+          <LogOut size={21} className="flex-shrink-0" />
 
           {!collapsed && (
-            <span className="text-lg">
+            <span className="text-sm sm:text-base">
               Logout
             </span>
           )}
