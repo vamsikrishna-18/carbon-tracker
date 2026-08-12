@@ -18,22 +18,35 @@ function UserLayout({ children }) {
 
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
+        aria-label="Toggle sidebar"
         className="
           lg:hidden
           fixed
           top-4
           left-4
           z-50
-          p-2
+
+          w-10
+          h-10
+
+          flex
+          items-center
+          justify-center
+
           rounded-lg
+
           bg-green-600
           text-white
-          hover:bg-green-700
-          transition
+
+          shadow-lg
+          shadow-green-600/20
+
+          active:scale-95
+
+          transition-all
         "
-        title="Toggle Menu"
       >
-        {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
+        {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
       </button>
 
       {/* ================================================= */}
@@ -54,7 +67,7 @@ function UserLayout({ children }) {
       )}
 
       {/* ================================================= */}
-      {/* FIXED SIDEBAR */}
+      {/* FIXED SIDEBAR (DESKTOP) */}
       {/* ================================================= */}
 
       <div
@@ -81,30 +94,32 @@ function UserLayout({ children }) {
       </div>
 
       {/* ================================================= */}
-      {/* MOBILE SIDEBAR OVERLAY */}
+      {/* MOBILE SIDEBAR (DRAWER) */}
       {/* ================================================= */}
 
-      {sidebarOpen && (
-        <div
-          className={`
-            fixed
-            top-0
-            left-0
-            h-screen
-            z-40
-            lg:hidden
-            w-72
-            transition-all
-            duration-300
-          `}
-        >
-          <UserSidebar
-            collapsed={false}
-            setCollapsed={() => setSidebarOpen(false)}
-            onClose={() => setSidebarOpen(false)}
-          />
-        </div>
-      )}
+      <div
+        className={`
+          fixed
+          top-0
+          left-0
+          h-screen
+          z-40
+          w-72
+          lg:hidden
+
+          transition-transform
+          duration-300
+          ease-in-out
+
+          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+        `}
+      >
+        <UserSidebar
+          collapsed={false}
+          setCollapsed={() => setSidebarOpen(false)}
+          onClose={() => setSidebarOpen(false)}
+        />
+      </div>
 
       {/* ================================================= */}
       {/* MAIN AREA */}
@@ -116,7 +131,6 @@ function UserLayout({ children }) {
           min-w-0
           transition-all
           duration-300
-          lg:ml-72
           ${collapsed ? "lg:ml-20" : "lg:ml-72"}
         `}
       >
@@ -138,7 +152,8 @@ function UserLayout({ children }) {
 
         <main
           className="
-            min-h-[calc(100vh-80px)]
+            min-h-[calc(100vh-64px)]
+            sm:min-h-[calc(100vh-80px)]
             min-w-0
             p-3
             sm:p-4

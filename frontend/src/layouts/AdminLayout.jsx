@@ -1,14 +1,72 @@
 import { useState } from "react";
 import AdminSidebar from "../components/admin/AdminSidebar";
 import AdminNavbar from "../components/admin/AdminNavbar";
+import { Menu, X } from "lucide-react";
 
 function AdminLayout({ children }) {
 
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
 
-    <div className="min-h-screen w-full overflow-x-hidden">
+    <div className="min-h-screen w-full overflow-x-hidden bg-gray-100 dark:bg-gray-950">
+
+      {/* ================================================= */}
+      {/* MOBILE HAMBURGER BUTTON */}
+      {/* ================================================= */}
+
+      <button
+        onClick={() => setMobileOpen(!mobileOpen)}
+        aria-label="Toggle sidebar"
+        className="
+          lg:hidden
+          fixed
+          top-4
+          left-4
+          z-50
+
+          w-10
+          h-10
+
+          rounded-lg
+
+          flex
+          items-center
+          justify-center
+
+          bg-green-600
+          text-white
+
+          shadow-lg
+          shadow-green-600/20
+
+          active:scale-95
+
+          transition-all
+        "
+      >
+        {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+      </button>
+
+
+      {/* ================================================= */}
+      {/* MOBILE OVERLAY */}
+      {/* ================================================= */}
+
+      {mobileOpen && (
+        <div
+          className="
+            fixed
+            inset-0
+            z-40
+            bg-black/50
+            lg:hidden
+          "
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
 
       {/* ================================================= */}
       {/* SIDEBAR */}
@@ -20,15 +78,20 @@ function AdminLayout({ children }) {
           top-0
           left-0
           h-screen
-          z-40
-          transition-all
-          duration-300
+          z-50
 
-          ${
-            collapsed
-              ? "w-20"
-              : "w-72"
-          }
+          w-72
+
+          transition-transform
+          duration-300
+          ease-in-out
+
+          lg:translate-x-0
+          lg:transition-[width]
+          lg:duration-300
+
+          ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
+          ${collapsed ? "lg:w-20" : "lg:w-72"}
         `}
       >
 
@@ -51,11 +114,7 @@ function AdminLayout({ children }) {
           transition-all
           duration-300
 
-          ${
-            collapsed
-              ? "ml-20"
-              : "ml-72"
-          }
+          ${collapsed ? "lg:ml-20" : "lg:ml-72"}
         `}
       >
 
@@ -65,7 +124,7 @@ function AdminLayout({ children }) {
 
         <div className="sticky top-0 z-30">
 
-          <AdminNavbar />
+          <AdminNavbar onMenuClick={() => setMobileOpen(!mobileOpen)} />
 
         </div>
 
@@ -76,11 +135,15 @@ function AdminLayout({ children }) {
 
         <main
           className="
-            min-h-[calc(100vh-80px)]
+            min-h-[calc(100vh-64px)]
+            sm:min-h-[calc(100vh-80px)]
 
             min-w-0
 
-            p-6
+            p-3
+            sm:p-4
+            md:p-6
+            lg:p-8
 
             bg-gray-100
             dark:bg-gray-950

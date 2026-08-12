@@ -10,6 +10,7 @@ import {
   Moon,
   Sun,
   Check,
+  X,
 } from "lucide-react";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -34,6 +35,7 @@ function UserNavbar({ onMenuClick }) {
   });
 
   const [search, setSearch] = useState("");
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   const [showNotifications, setShowNotifications] =
     useState(false);
@@ -184,8 +186,10 @@ function UserNavbar({ onMenuClick }) {
         text-gray-900
         dark:text-white
         shadow-md
-        px-3
-        sm:px-4
+        pl-16
+        pr-3
+        sm:pl-4
+        sm:pr-4
         md:px-6
         lg:px-8
         py-2.5
@@ -200,13 +204,16 @@ function UserNavbar({ onMenuClick }) {
         lg:gap-6
         min-h-16
         sm:min-h-20
+        min-w-0
       "
     >
       {/* ======================================================
-          SEARCH - HIDE ON MOBILE
+          SEARCH - DESKTOP (aligned to same lg: breakpoint as
+          the hamburger button in UserLayout, so they never
+          fight for the same space)
       ====================================================== */}
 
-      <div className="relative hidden md:block flex-1 max-w-md">
+      <div className="relative hidden lg:block flex-1 max-w-md min-w-0">
         <Search
           className="
             absolute
@@ -249,16 +256,99 @@ function UserNavbar({ onMenuClick }) {
       </div>
 
       {/* ======================================================
+          MOBILE SEARCH TOGGLE (search bar was previously
+          completely inaccessible below lg — this restores it)
+      ====================================================== */}
+
+      <button
+        onClick={() => setMobileSearchOpen((prev) => !prev)}
+        className="
+          lg:hidden
+          flex-shrink-0
+          hover:text-green-600
+          transition
+        "
+        aria-label="Toggle search"
+      >
+        {mobileSearchOpen ? <X size={22} /> : <Search size={22} />}
+      </button>
+
+      {mobileSearchOpen && (
+        <div
+          className="
+            absolute
+            left-0
+            right-0
+            top-full
+            lg:hidden
+            px-3
+            sm:px-4
+            py-2.5
+            bg-white
+            dark:bg-gray-900
+            border-t
+            border-gray-200
+            dark:border-gray-700
+            shadow-md
+            z-40
+          "
+        >
+          <div className="relative">
+            <Search
+              className="
+                absolute
+                left-3
+                top-1/2
+                -translate-y-1/2
+                text-gray-500
+              "
+              size={18}
+            />
+            <input
+              autoFocus
+              type="text"
+              placeholder="Search..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="
+                w-full
+                pl-10
+                pr-4
+                py-2.5
+                text-sm
+                border-2
+                rounded-lg
+                bg-white
+                dark:bg-gray-800
+                border-gray-200
+                dark:border-gray-700
+                text-gray-900
+                dark:text-white
+                outline-none
+                focus:ring-2
+                focus:ring-green-500
+              "
+            />
+          </div>
+        </div>
+      )}
+
+      {/* ======================================================
           RIGHT SIDE - RESPONSIVE GAP
       ====================================================== */}
 
-      <div className="flex items-center gap-2 sm:gap-3 md:gap-4 lg:gap-6">
+      <div className="flex items-center gap-1.5 xs:gap-2 sm:gap-3 md:gap-4 lg:gap-6 min-w-0 flex-shrink-0">
 
-        {/* LANGUAGE */}
+        {/* LANGUAGE — hide on very small phones to save space,
+            still reachable via profile menu / larger screens */}
 
-        <LanguageDropdown />
+        <div className="hidden sm:block">
+          <LanguageDropdown />
+        </div>
 
-        <GoogleTranslate />
+        <div className="hidden sm:block">
+          <GoogleTranslate />
+        </div>
 
         {/* ====================================================
             NOTIFICATIONS
@@ -312,25 +402,25 @@ function UserNavbar({ onMenuClick }) {
 
           {showNotifications && (
             <div
-  className="
-    absolute
-    right-0
-    top-full
-    mt-3
-    w-[380px]
-    min-w-[380px]
-    max-w-[calc(100vw-2rem)]
-    bg-white
-    dark:bg-gray-800
-    border
-    border-gray-200
-    dark:border-gray-700
-    rounded-xl
-    shadow-2xl
-    z-[9999]
-    overflow-hidden
-  "
->
+              className="
+                absolute
+                right-0
+                top-full
+                mt-3
+                w-[380px]
+                min-w-0
+                max-w-[calc(100vw-1.5rem)]
+                bg-white
+                dark:bg-gray-800
+                border
+                border-gray-200
+                dark:border-gray-700
+                rounded-xl
+                shadow-2xl
+                z-[9999]
+                overflow-hidden
+              "
+            >
 
               {/* HEADER */}
 
@@ -344,14 +434,16 @@ function UserNavbar({ onMenuClick }) {
                   flex
                   justify-between
                   items-center
+                  gap-2
                 "
               >
-                <div>
+                <div className="min-w-0">
                   <h3
                     className="
                       font-bold
                       text-gray-900
                       dark:text-white
+                      truncate
                     "
                   >
                     Notifications
@@ -380,6 +472,7 @@ function UserNavbar({ onMenuClick }) {
                     text-green-600
                     hover:text-green-700
                     font-semibold
+                    flex-shrink-0
                   "
                 >
                   View All
@@ -483,6 +576,7 @@ function UserNavbar({ onMenuClick }) {
                                   text-sm
                                   text-gray-900
                                   dark:text-white
+                                  truncate
                                 "
                               >
                                 {notification.title}
@@ -535,7 +629,8 @@ function UserNavbar({ onMenuClick }) {
 
         <button
           onClick={toggleTheme}
-          className="hover:text-green-600 transition"
+          className="hover:text-green-600 transition flex-shrink-0"
+          aria-label="Toggle theme"
         >
           {darkMode ? (
             <Sun size={22} />
@@ -548,7 +643,7 @@ function UserNavbar({ onMenuClick }) {
             USER PROFILE
         ==================================================== */}
 
-        <div className="relative">
+        <div className="relative min-w-0">
 
           <button
             onClick={() =>
@@ -557,7 +652,9 @@ function UserNavbar({ onMenuClick }) {
             className="
               flex
               items-center
-              gap-2
+              gap-1.5
+              sm:gap-2
+              min-w-0
             "
           >
 
@@ -565,31 +662,40 @@ function UserNavbar({ onMenuClick }) {
 
             <div
               className="
-                w-10
-                h-10
+                w-9
+                h-9
+                sm:w-10
+                sm:h-10
                 rounded-full
                 bg-green-600
                 text-white
                 flex
                 justify-center
                 items-center
+                flex-shrink-0
               "
             >
-              <User size={18} />
+              <User size={17} />
             </div>
 
-            {/* NAME */}
+            {/* NAME — hidden below sm: to prevent overflow on
+                narrow phones; avatar remains the tap target */}
 
             <span
               className="
+                hidden
+                sm:inline
                 font-semibold
                 dark:text-white
+                truncate
+                max-w-[7rem]
+                md:max-w-[10rem]
               "
             >
               {user?.fullName || "User"}
             </span>
 
-            <ChevronDown size={18} />
+            <ChevronDown size={18} className="hidden sm:block flex-shrink-0" />
           </button>
 
           {/* PROFILE MENU */}
@@ -600,7 +706,9 @@ function UserNavbar({ onMenuClick }) {
                 absolute
                 right-0
                 mt-3
-                w-60
+                w-56
+                sm:w-60
+                max-w-[calc(100vw-1.5rem)]
                 bg-white
                 dark:bg-gray-800
                 rounded-xl
@@ -609,6 +717,14 @@ function UserNavbar({ onMenuClick }) {
                 z-50
               "
             >
+
+              {/* Language + translate shown here on mobile since
+                  they're hidden from the main bar below sm: */}
+
+              <div className="sm:hidden flex items-center gap-2 px-5 py-3 border-b border-gray-100 dark:border-gray-700">
+                <LanguageDropdown />
+                <GoogleTranslate />
+              </div>
 
               {/* MY PROFILE */}
 
