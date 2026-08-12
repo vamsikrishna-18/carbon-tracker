@@ -14,6 +14,7 @@ C:\Users\vamsi\Downloads\carbon-tracker-repo\backend\src\main\java\com\project\c
 C:\Users\vamsi\Downloads\carbon-tracker-repo\backend\src\main\java\com\project\carbontracker\controller\LeaderboardController.java
 C:\Users\vamsi\Downloads\carbon-tracker-repo\backend\src\main\java\com\project\carbontracker\controller\LoginController.java
 C:\Users\vamsi\Downloads\carbon-tracker-repo\backend\src\main\java\com\project\carbontracker\controller\NotificationController.java
+C:\Users\vamsi\Downloads\carbon-tracker-repo\backend\src\main\java\com\project\carbontracker\controller\OAuth2CallbackController.java
 C:\Users\vamsi\Downloads\carbon-tracker-repo\backend\src\main\java\com\project\carbontracker\controller\OrganizationController.java
 C:\Users\vamsi\Downloads\carbon-tracker-repo\backend\src\main\java\com\project\carbontracker\controller\RecommendationController.java
 C:\Users\vamsi\Downloads\carbon-tracker-repo\backend\src\main\java\com\project\carbontracker\controller\SupportController.java
@@ -38,6 +39,7 @@ C:\Users\vamsi\Downloads\carbon-tracker-repo\backend\src\main\java\com\project\c
 C:\Users\vamsi\Downloads\carbon-tracker-repo\backend\src\main\java\com\project\carbontracker\dto\SupportRequest.java
 C:\Users\vamsi\Downloads\carbon-tracker-repo\backend\src\main\java\com\project\carbontracker\dto\SupportResponse.java
 C:\Users\vamsi\Downloads\carbon-tracker-repo\backend\src\main\java\com\project\carbontracker\dto\UpdateProfileRequest.java
+C:\Users\vamsi\Downloads\carbon-tracker-repo\backend\src\main\java\com\project\carbontracker\dto\UserResponse.java
 C:\Users\vamsi\Downloads\carbon-tracker-repo\backend\src\main\java\com\project\carbontracker\entity\Activity.java
 C:\Users\vamsi\Downloads\carbon-tracker-repo\backend\src\main\java\com\project\carbontracker\entity\Admin.java
 C:\Users\vamsi\Downloads\carbon-tracker-repo\backend\src\main\java\com\project\carbontracker\entity\Announcement.java

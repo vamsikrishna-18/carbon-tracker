@@ -17,7 +17,7 @@ public class CorsConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(Arrays.asList(
-                "https://carbon-tracker-ruddy.vercel.app",
+                "https://carbon-tracker-pulse.vercel.app",
                 "http://localhost:5173",
                 "http://localhost:4173"
         ));
