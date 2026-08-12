@@ -9,7 +9,7 @@ import ActivityDropdown from "../components/activity/ActivityDropdown";
 import QuantityInput from "../components/activity/QuantityInput";
 import QuickLogCarousel from "../components/activity/QuickLogCarousel";
 
-const API_BASE_URL = "http://localhost:8080";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function AddActivity() {
   const navigate = useNavigate();

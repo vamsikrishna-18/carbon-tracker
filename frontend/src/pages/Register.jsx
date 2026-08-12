@@ -93,8 +93,8 @@ function Register() {
   // Google handles the sign-up/sign-in, then your OAuth2SuccessHandler
   // redirects back to the React app (e.g. http://localhost:5173/dashboard).
   const handleGoogleRegister = () => {
-    window.location.href =
-      "http://localhost:8080/oauth2/authorization/google";
+    const backendOrigin = import.meta.env.VITE_API_BASE_URL.replace(/\/api$/, "");
+    window.location.href = `${backendOrigin}/oauth2/authorization/google`;
   };
 
   return (

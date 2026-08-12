@@ -30,8 +30,9 @@ function CategoryPieChart() {
 
   const loadData = async () => {
     try {
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
       const res = await axios.get(
-        `http://localhost:8080/api/activity/category-summary/${user.id}`
+        `${apiBaseUrl}/activity/category-summary/${user.id}`
       );
 
       const chartData = Object.entries(res.data).map(

@@ -149,7 +149,7 @@ function AdminSettings() {
       setPasswordLoading(true);
 
       const response = await axios.post(
-        `http://localhost:8080/api/user/change-password/${adminId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/user/change-password/${adminId}`,
         {
           currentPassword,
           newPassword,

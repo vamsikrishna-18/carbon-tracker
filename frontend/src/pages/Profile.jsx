@@ -37,7 +37,7 @@ function Profile() {
   const handleSave = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/user/update/${user.id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/user/update/${user.id}`,
         {
           method: "PUT",
           headers: {

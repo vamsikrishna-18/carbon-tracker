@@ -1,19 +1,21 @@
 import axios from "axios";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const userApi = axios.create({
-  baseURL: "http://localhost:8080/api/user",
+  baseURL: `${API_BASE_URL}/user`,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
 const adminApi = axios.create({
-  baseURL: "http://localhost:8080/api/admin",
+  baseURL: `${API_BASE_URL}/admin`,
   headers: {
     "Content-Type": "application/json",
   },
 });
-const API = "http://localhost:8080/api/activity";
+const API = `${API_BASE_URL}/activity`;
 
 export const getDashboardData = (userId) =>
   axios.get(`${API}/dashboard/${userId}`);

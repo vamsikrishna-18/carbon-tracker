@@ -30,7 +30,7 @@ function AdminProfile() {
         }
 
         const response = await axios.get(
-          `http://localhost:8080/api/user/profile/${storedUser.id}`
+          `${import.meta.env.VITE_API_BASE_URL}/user/profile/${storedUser.id}`
         );
 
         const updatedUser = response.data;

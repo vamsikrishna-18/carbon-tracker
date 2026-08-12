@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API = "http://localhost:8080/api/recommendations";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API = `${API_BASE_URL}/recommendations`;
 
 export const getRecommendations = (userId) => {
   return axios.get(`${API}/${userId}`);
