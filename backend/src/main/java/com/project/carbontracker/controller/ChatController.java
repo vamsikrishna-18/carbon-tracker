@@ -1,13 +1,16 @@
 package com.project.carbontracker.controller;
 
-import com.project.carbontracker.service.ChatServiceImpl;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.Map;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.project.carbontracker.service.ChatServiceImpl;
 
 @RestController
 @RequestMapping("/api/chat")
-@CrossOrigin(origins = "http://localhost:5173")
 public class ChatController {
 
     private final ChatServiceImpl chatService;

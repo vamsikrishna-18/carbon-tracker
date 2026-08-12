@@ -153,7 +153,7 @@ export default defineConfig({
 
           {
             urlPattern:
-              /^http:\/\/localhost:8080\/api\/.*/i,
+              /^https:\/\/carbon-tracker-backend-bwec\.onrender\.com\/api\/.*/i,
 
             handler: "NetworkOnly",
           },

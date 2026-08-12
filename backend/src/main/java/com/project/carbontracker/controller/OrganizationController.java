@@ -1,24 +1,22 @@
 package com.project.carbontracker.controller;
 
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.project.carbontracker.dto.EmployeeCreateRequest;
 import com.project.carbontracker.service.OrganizationService;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/organization")
 @RequiredArgsConstructor
-@CrossOrigin(
-        origins = {
-                "http://localhost:5173",
-                "http://localhost:4173"
-        }
-)
 public class OrganizationController {
 
     private final OrganizationService organizationService;
