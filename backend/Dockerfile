@@ -1,12 +1,18 @@
-FROM eclipse-temurin:23-jdk
+FROM maven:3.9.11-eclipse-temurin-23 AS build
 
 WORKDIR /app
 
-COPY . .
+COPY pom.xml .
+COPY src ./src
 
-RUN chmod +x mvnw
-RUN ./mvnw clean package -DskipTests
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:23-jre
+
+WORKDIR /app
+
+COPY --from=build /app/target/carbontracker-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 10000
 
-CMD ["sh", "-c", "java -jar target/carbontracker-0.0.1-SNAPSHOT.jar --server.port=${PORT:-10000}"]
+CMD ["sh", "-c", "java -jar app.jar --server.port=${PORT:-10000}"]
