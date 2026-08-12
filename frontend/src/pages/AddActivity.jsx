@@ -355,7 +355,7 @@ function AddActivity() {
       console.log("Payload:", payload);
 
       const response = await axios.post(
-        `${API_BASE_URL}/api/activity/add`,
+        `${API_BASE_URL}/activity/add`,
         payload,
         {
           headers: {

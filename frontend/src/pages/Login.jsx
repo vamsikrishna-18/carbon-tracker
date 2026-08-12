@@ -79,14 +79,14 @@ function Login() {
     try {
       console.log("========== LOGIN ==========");
       console.log("EMAIL:", cleanEmail);
-      console.log("ENDPOINT:", `${API_BASE_URL}/api/auth/login`);
+      console.log("ENDPOINT:", `${API_BASE_URL}/auth/login`);
 
       // --------------------------------------------------------
       // ONE LOGIN ENDPOINT FOR BOTH USER AND ADMIN
       // --------------------------------------------------------
 
       const response = await axios.post(
-        `${API_BASE_URL}/api/auth/login`,
+        `${API_BASE_URL}/auth/login`,
         {
           email: cleanEmail,
           password: password,
