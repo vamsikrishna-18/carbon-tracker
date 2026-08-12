@@ -17,8 +17,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("${app.cors.allowed-origins:http://localhost:5173,http://localhost:4173}")
+    @Value("${app.cors.allowed-origins:http://localhost:5173,http://localhost:4173,https://carbon-tracker-ruddy.vercel.app}")
     private String allowedOrigins;
+
+    @Value("${app.frontend.url:http://localhost:4173}")
+    private String frontendUrl;
 
     @Bean
     public SecurityFilterChain securityFilterChain(
@@ -60,7 +63,7 @@ public class SecurityConfig {
 
                 .oauth2Login(oauth ->
                         oauth.defaultSuccessUrl(
-                                "http://localhost:4173/dashboard",
+                                frontendUrl + "/dashboard",
                                 true
                         )
                 );
