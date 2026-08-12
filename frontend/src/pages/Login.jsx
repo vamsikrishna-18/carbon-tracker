@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 import axios from "axios";
-import "./Login.css";
+import "./login.css";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
