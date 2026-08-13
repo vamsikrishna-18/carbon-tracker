@@ -9,6 +9,7 @@ import { Toaster } from "react-hot-toast";
 
 import GoogleTranslate from "./components/common/GoogleTranslate";
 import "./styles/googleTranslate.css";
+import { hideGoogleTranslateToolbar } from "./utils/googleTranslate";
 
 // =====================================================
 // PUBLIC
@@ -80,45 +81,15 @@ function App() {
 
   useEffect(() => {
 
-    const removeGoogleBar = () => {
-
-      // Google Translate top banner
-      const banner = document.querySelector(
-        ".goog-te-banner-frame"
-      );
-
-      if (banner && banner.style.display !== "none") {
-        banner.style.display = "none";
-      }
-
-      // Google sometimes adds top offset to body
-      if (document.body.style.top !== "0px") {
-        document.body.style.top = "0px";
-      }
-
-      // Remove iframe visual offset if present
-      const iframe = document.querySelector(
-        "iframe.goog-te-banner-frame"
-      );
-
-      if (iframe && iframe.style.display !== "none") {
-        iframe.style.display = "none";
-      }
-
-    };
-
-    // Run immediately
-    removeGoogleBar();
+    hideGoogleTranslateToolbar();
 
     // Google injects its banner after the language selection changes.
     // Watch for it so it is hidden immediately instead of waiting for a
     // polling interval (which causes the visible page jump).
-    const observer = new MutationObserver(removeGoogleBar);
-    observer.observe(document.documentElement, {
+    const observer = new MutationObserver(hideGoogleTranslateToolbar);
+    observer.observe(document.body, {
       childList: true,
       subtree: true,
-      attributes: true,
-      attributeFilter: ["style"],
     });
 
     return () => {

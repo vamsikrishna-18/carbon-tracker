@@ -1,3 +1,17 @@
+// The Google website widget creates this toolbar outside React's DOM after a
+// language change. Removing it is more reliable than trying to override its
+// cross-origin iframe styles.
+export function hideGoogleTranslateToolbar() {
+  document.querySelectorAll("iframe.goog-te-banner-frame").forEach((banner) => {
+    banner.remove();
+  });
+
+  document.documentElement.style.setProperty("margin-top", "0px", "important");
+  document.documentElement.style.setProperty("top", "0px", "important");
+  document.body.style.setProperty("margin-top", "0px", "important");
+  document.body.style.setProperty("top", "0px", "important");
+}
+
 export function changeLanguage(language) {
   const languageMap = {
     en: "en",
@@ -44,6 +58,12 @@ export function changeLanguage(language) {
       bubbles: true,
     })
   );
+
+  // The widget adds the toolbar asynchronously. Run after its change handler
+  // and once more after it has had time to inject its iframe.
+  hideGoogleTranslateToolbar();
+  requestAnimationFrame(hideGoogleTranslateToolbar);
+  window.setTimeout(hideGoogleTranslateToolbar, 100);
 
   return true;
 }
