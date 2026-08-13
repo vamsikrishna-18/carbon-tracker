@@ -6,8 +6,7 @@ import {
   Lightbulb,
   Gift,
   Trophy,
-  PanelLeftClose,
-  PanelLeftOpen,
+  Menu,
   LifeBuoy,
   Target,
 } from "lucide-react";
@@ -29,17 +28,15 @@ const NAV_ITEMS = [
 function UserSidebar({ collapsed, setCollapsed, onClose }) {
 
   // The mobile drawer (onClose is passed by UserLayout only in that
-  // context) already overlays the page and closes itself, so the
-  // "collapsed / icon-only" affordance is a desktop-only space-saving
-  // feature. Forcing it off on mobile keeps labels tappable and
-  // readable instead of showing a cramped icon rail inside a drawer.
+  // context) already overlays the page and is opened/closed by the
+  // parent (backdrop tap, route change, etc.), so the collapse-to-0
+  // behavior below is a desktop-only space-saving feature. On mobile
+  // the drawer always renders fully expanded while it's mounted.
   const isMobileDrawer = Boolean(onClose);
   const effectiveCollapsed = isMobileDrawer ? false : collapsed;
 
   const menuClass = ({ isActive }) =>
-    `flex items-center ${
-      effectiveCollapsed ? "justify-center" : "gap-3"
-    } px-4 sm:px-5 py-3.5 sm:py-4 rounded-lg transition-all duration-300 ${
+    `flex items-center gap-3 px-4 sm:px-5 py-3.5 sm:py-4 rounded-lg transition-all duration-300 ${
       isActive
         ? "bg-green-600 text-white shadow-md"
         : "text-gray-700 dark:text-gray-200 hover:bg-green-100 dark:hover:bg-green-900/50 hover:text-green-700 dark:hover:text-green-300"
@@ -48,197 +45,184 @@ function UserSidebar({ collapsed, setCollapsed, onClose }) {
 
   return (
 
+    // Fragment: the collapsible sidebar itself, plus a small floating
+    // "reopen" tab that only renders while fully collapsed on desktop
+    // (see below). The tab is what makes the sidebar reopenable once
+    // it's fully closed — the sidebar's own toggle button is clipped
+    // away with it at w-0.
+    <>
+
+    {effectiveCollapsed && !isMobileDrawer && (
+      <button
+        onClick={() => setCollapsed(false)}
+        className="
+          fixed
+          top-4
+          left-0
+          z-40
+          p-2
+          rounded-r-lg
+          bg-white dark:bg-gray-900
+          border border-l-0
+          border-gray-200 dark:border-gray-700
+          text-gray-700 dark:text-gray-200
+          hover:bg-green-100
+          dark:hover:bg-green-900/50
+          hover:text-green-600
+          dark:hover:text-green-400
+          shadow-md
+          transition
+        "
+        title="Open Sidebar"
+        aria-label="Open Sidebar"
+      >
+        <Menu size={20} />
+      </button>
+    )}
+
     <div
       className={`${
-        effectiveCollapsed ? "w-20" : "w-72"
-      } h-screen
+        effectiveCollapsed
+          ? "w-0 border-r-0 shadow-none"
+          : "w-72 border-r border-gray-200 dark:border-gray-700 shadow-lg"
+      }
+      h-screen
       h-[100dvh]
       max-w-[85vw]
       sm:max-w-full
       bg-white dark:bg-gray-900
-      border-r border-gray-200 dark:border-gray-700
       text-gray-900 dark:text-white
       flex flex-col
       transition-all duration-300
-      overflow-hidden
-      shadow-lg`}
+      overflow-hidden`}
     >
 
-      {/* =================================================
-          HEADER
-      ================================================= */}
+      {/* Fixed-width inner wrapper — the OUTER div animates 0 <-> 18rem
+          and clips via overflow-hidden, while everything inside keeps
+          its normal full-width layout instead of being squeezed/reflowed
+          mid-animation. This gives a clean slide-away instead of a
+          "thin sliver" of visible content when collapsed. */}
 
-      <div
-        className="
-          p-4
-          sm:p-5
-          border-b
-          border-gray-200
-          dark:border-gray-700
-          flex-shrink-0
-        "
-      >
+      <div className="w-72 h-full flex flex-col flex-shrink-0">
 
-        <div className="flex items-center justify-between gap-2">
+        {/* =================================================
+            HEADER
+        ================================================= */}
 
-          {/* COLLAPSE TOGGLE — desktop persistent sidebar only.
-              The mobile drawer has no use for this since it already
-              collapses by closing entirely. */}
+        <div
+          className="
+            p-4
+            sm:p-5
+            border-b
+            border-gray-200
+            dark:border-gray-700
+            flex-shrink-0
+          "
+        >
 
-          {!isMobileDrawer && (
-            <button
-              onClick={() => setCollapsed(!collapsed)}
-              className="
-                p-2
-                rounded-lg
-                text-gray-700
-                dark:text-gray-200
-                hover:bg-green-100
-                dark:hover:bg-green-900/50
-                hover:text-green-600
-                dark:hover:text-green-400
-                transition
-                flex-shrink-0
-              "
-              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              {collapsed ? (
-                <PanelLeftOpen size={22} />
-              ) : (
-                <PanelLeftClose size={22} />
-              )}
-            </button>
-          )}
+          {/* COLLAPSE / MENU TOGGLE — same single-button pattern as
+              AdminSidebar. No separate close (X) button; the mobile
+              drawer is dismissed via this same toggle or by tapping
+              a nav item (see onClose usage below). */}
 
-          {/* App name sits inline with the header row on mobile so
-              the drawer doesn't waste a whole extra line before it */}
+          <button
+            onClick={() => (isMobileDrawer ? onClose() : setCollapsed(!collapsed))}
+            className="
+              -ml-1.5
+              p-1.5
+              rounded-lg
+              text-gray-700
+              dark:text-gray-200
+              hover:bg-green-100
+              dark:hover:bg-green-900/50
+              hover:text-green-600
+              dark:hover:text-green-400
+              transition
+              leading-none
+            "
+            title={isMobileDrawer ? "Close menu" : "Toggle Sidebar"}
+            aria-label={isMobileDrawer ? "Close menu" : "Toggle Sidebar"}
+          >
+            <Menu size={22} />
+          </button>
 
-          {isMobileDrawer && (
-            <h1
-              className="
-                text-lg
-                font-bold
-                truncate
-                min-w-0
-                flex-1
-                text-gray-900
-                dark:text-white
-              "
-              title="Carbon Tracker"
-            >
-              🌿 Carbon Tracker
-            </h1>
-          )}
-
-          {/* The mobile drawer's close (X) button has been removed here
-              since a separate close control already exists outside this
-              component (top-left). `onClose` is still passed down and used
-              below so tapping a nav item still dismisses the drawer. */}
-
-        </div>
+          <h1
+            className="
+              text-xl
+              sm:text-2xl
+              lg:text-3xl
+              font-bold
+              mt-3
+              sm:mt-4
+              truncate
+              text-gray-900
+              dark:text-white
+            "
+            title="Carbon Tracker"
+          >
+            🌿 Carbon Tracker
+          </h1>
 
 
-        {/* Desktop-only branding block — on mobile the title already
-            lives in the header row above */}
-
-        {!isMobileDrawer && !collapsed && (
-
-          <>
-
-            <h1
-              className="
-                text-xl
-                sm:text-2xl
-                lg:text-3xl
-                font-bold
-                mt-3
-                sm:mt-4
-                truncate
-                text-gray-900
-                dark:text-white
-              "
-              title="Carbon Tracker"
-            >
-              🌿 Carbon Tracker
-            </h1>
-
-
-            <p
-              className="
-                text-green-600
-                dark:text-green-400
-                text-xs
-                sm:text-sm
-                mt-1.5
-                sm:mt-2
-                truncate
-              "
-            >
-              User Panel
-            </p>
-
-          </>
-
-        )}
-
-        {isMobileDrawer && (
           <p
             className="
               text-green-600
               dark:text-green-400
               text-xs
-              mt-1
+              sm:text-sm
+              mt-1.5
+              sm:mt-2
               truncate
             "
           >
             User Panel
           </p>
-        )}
 
-      </div>
+        </div>
 
 
-      {/* =================================================
-          NAVIGATION
-      ================================================= */}
+        {/* =================================================
+            NAVIGATION
+        ================================================= */}
 
-      <nav
-        className="
-          flex-1
-          mt-4
-          sm:mt-6
-          px-2.5
-          sm:px-3
-          pb-[max(1rem,env(safe-area-inset-bottom))]
-          space-y-1.5
-          sm:space-y-2
-          overflow-y-auto
-          overflow-x-hidden
-        "
-      >
+        <nav
+          className="
+            flex-1
+            mt-4
+            sm:mt-6
+            px-2.5
+            sm:px-3
+            pb-[max(1rem,env(safe-area-inset-bottom))]
+            space-y-1.5
+            sm:space-y-2
+            overflow-y-auto
+            overflow-x-hidden
+          "
+        >
 
-        {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
-          <NavLink
-            key={to}
-            to={to}
-            onClick={isMobileDrawer ? onClose : undefined}
-            className={menuClass}
-            title={label}
-          >
-            <Icon size={22} className="flex-shrink-0" />
+          {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
+            <NavLink
+              key={to}
+              to={to}
+              onClick={isMobileDrawer ? onClose : undefined}
+              className={menuClass}
+              title={label}
+            >
+              <Icon size={22} className="flex-shrink-0" />
 
-            {!effectiveCollapsed && (
               <span className="whitespace-nowrap truncate text-sm sm:text-base">
                 {label}
               </span>
-            )}
-          </NavLink>
-        ))}
+            </NavLink>
+          ))}
 
-      </nav>
+        </nav>
+
+      </div>
 
     </div>
+
+    </>
   );
 }
 
