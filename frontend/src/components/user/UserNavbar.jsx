@@ -11,6 +11,7 @@ import {
   Sun,
   Check,
   X,
+  Menu,
 } from "lucide-react";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -251,39 +252,64 @@ function UserNavbar({ onMenuClick }) {
     <div
       className="
         relative
+        w-full
         bg-white
         dark:bg-gray-900
         text-gray-900
         dark:text-white
         shadow-md
+        flex
+        items-center
+        justify-between
+        gap-2
+        sm:gap-3
+        md:gap-4
+        lg:gap-6
+        min-w-0
+        h-14
+        sm:h-16
         pl-16
         pr-3
         sm:pl-4
         sm:pr-4
         md:px-6
         lg:px-8
-        py-2
-        sm:py-2.5
-        md:py-3
-        flex
-        justify-between
-        items-center
-        gap-2
-        sm:gap-3
-        md:gap-4
-        lg:gap-6
-        min-h-14
-        sm:min-h-16
-        min-w-0
       "
     >
+      {/* ======================================================
+          MOBILE MENU BUTTON — only rendered if a handler was
+          passed in. If your layout already renders its own
+          hamburger over the pl-16 gutter, leave onMenuClick
+          unset and this button simply won't render.
+      ====================================================== */}
+
+      {onMenuClick && (
+        <button
+          onClick={onMenuClick}
+          className="
+            lg:hidden
+            flex-shrink-0
+            flex
+            items-center
+            justify-center
+            -ml-12
+            sm:ml-0
+            hover:text-green-600
+            transition
+          "
+          aria-label="Open menu"
+        >
+          <Menu size={22} />
+        </button>
+      )}
+
       {/* ======================================================
           SEARCH - DESKTOP (aligned to same lg: breakpoint as
           the hamburger button in UserLayout, so they never
           fight for the same space)
       ====================================================== */}
 
-      <div className="relative hidden lg:block flex-1 max-w-md min-w-0">
+      <div className="relative hidden lg:flex flex-1 max-w-md min-w-0 items-center">
         <Search
           className="
             absolute
@@ -291,8 +317,7 @@ function UserNavbar({ onMenuClick }) {
             top-1/2
             -translate-y-1/2
             text-gray-500
-            w-5
-            h-5
+            pointer-events-none
           "
           size={18}
         />
@@ -323,6 +348,12 @@ function UserNavbar({ onMenuClick }) {
         />
       </div>
 
+      {/* Spacer so the right-side icon cluster still gets pushed to
+          the far right on mobile/tablet, where the search box above
+          is hidden and wouldn't otherwise fill this space */}
+
+      <div className="flex-1 lg:hidden min-w-0" />
+
       {/* ======================================================
           MOBILE SEARCH TOGGLE
       ====================================================== */}
@@ -332,6 +363,9 @@ function UserNavbar({ onMenuClick }) {
         className="
           lg:hidden
           flex-shrink-0
+          flex
+          items-center
+          justify-center
           hover:text-green-600
           transition
         "
@@ -362,7 +396,7 @@ function UserNavbar({ onMenuClick }) {
             z-40
           "
         >
-          <div className="relative">
+          <div className="relative flex items-center">
             <Search
               className="
                 absolute
@@ -370,6 +404,7 @@ function UserNavbar({ onMenuClick }) {
                 top-1/2
                 -translate-y-1/2
                 text-gray-500
+                pointer-events-none
               "
               size={18}
             />
@@ -406,6 +441,9 @@ function UserNavbar({ onMenuClick }) {
                   right-3
                   top-1/2
                   -translate-y-1/2
+                  flex
+                  items-center
+                  justify-center
                   text-gray-400
                   hover:text-gray-600
                   dark:hover:text-gray-200
@@ -423,16 +461,28 @@ function UserNavbar({ onMenuClick }) {
           RIGHT SIDE - RESPONSIVE GAP
       ====================================================== */}
 
-      <div className="flex items-center gap-1.5 xs:gap-2 sm:gap-3 md:gap-4 lg:gap-6 min-w-0 flex-shrink-0">
+      <div
+        className="
+          flex
+          items-center
+          gap-1.5
+          xs:gap-2
+          sm:gap-3
+          md:gap-4
+          lg:gap-6
+          min-w-0
+          flex-shrink-0
+        "
+      >
 
         {/* LANGUAGE — hide on very small phones to save space,
             still reachable via profile menu / larger screens */}
 
-        <div className="hidden sm:block">
+        <div className="hidden sm:flex items-center">
           <LanguageDropdown />
         </div>
 
-        <div className="hidden sm:block">
+        <div className="hidden sm:flex items-center">
           <GoogleTranslate />
         </div>
 
@@ -440,12 +490,15 @@ function UserNavbar({ onMenuClick }) {
             NOTIFICATIONS
         ==================================================== */}
 
-        <div className="relative shrink-0" ref={notificationRef}>
+        <div className="relative flex items-center shrink-0" ref={notificationRef}>
 
           <button
             onClick={toggleNotifications}
             className="
               relative
+              flex
+              items-center
+              justify-center
               hover:text-green-600
               transition
             "
@@ -689,7 +742,14 @@ function UserNavbar({ onMenuClick }) {
 
         <button
           onClick={toggleTheme}
-          className="hover:text-green-600 transition flex-shrink-0"
+          className="
+            flex
+            items-center
+            justify-center
+            hover:text-green-600
+            transition
+            flex-shrink-0
+          "
           aria-label="Toggle theme"
         >
           {darkMode ? <Sun size={22} /> : <Moon size={22} />}
@@ -699,7 +759,7 @@ function UserNavbar({ onMenuClick }) {
             USER PROFILE
         ==================================================== */}
 
-        <div className="relative min-w-0" ref={profileRef}>
+        <div className="relative flex items-center min-w-0" ref={profileRef}>
 
           <button
             onClick={toggleProfile}
@@ -727,8 +787,8 @@ function UserNavbar({ onMenuClick }) {
                 bg-green-600
                 text-white
                 flex
-                justify-center
                 items-center
+                justify-center
                 flex-shrink-0
               "
             >
@@ -741,12 +801,13 @@ function UserNavbar({ onMenuClick }) {
             <span
               className="
                 hidden
-                sm:inline
+                sm:inline-block
                 font-semibold
                 dark:text-white
                 truncate
                 max-w-[7rem]
                 md:max-w-[10rem]
+                leading-none
               "
             >
               {user?.fullName || "User"}
