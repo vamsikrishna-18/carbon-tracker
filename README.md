@@ -255,6 +255,9 @@ The app runs on Vite's dev server at `http://localhost:5173`.
 | `GROQ_API_KEY` | API key for Groq / Llama AI recommendations |
 | `GOOGLE_CLIENT_ID` | Google OAuth2 client ID |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth2 client secret |
+| `OAUTH_REDIRECT_URI` | Exact Google callback URL, e.g. `https://your-backend/login/oauth2/code/google` |
+| `APP_FRONTEND_URL` | Frontend origin used after OAuth, e.g. `https://your-app.vercel.app` |
+| `APP_CORS_ALLOWED_ORIGINS` | Comma-separated browser origins permitted to call the API |
 
 ### Frontend (`frontend/.env`)
 

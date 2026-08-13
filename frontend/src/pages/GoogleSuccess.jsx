@@ -13,13 +13,6 @@ function GoogleSuccess() {
         const email = searchParams.get("email");
         const role = searchParams.get("role");
 
-        console.log("========== GOOGLE LOGIN SUCCESS ==========");
-        console.log("ID:", id);
-        console.log("Name:", name);
-        console.log("Email:", email);
-        console.log("Role:", role);
-
-
         // Make sure required data exists
         if (!id || !email || !role) {
 
@@ -58,11 +51,20 @@ function GoogleSuccess() {
             role
         );
 
+        if (role === "ADMIN") {
+            localStorage.setItem("admin", JSON.stringify(user));
+        }
+
 
         // Redirect according to role
         if (role === "ADMIN") {
 
             navigate("/admin/dashboard");
+
+        } else if (role === "ORGANIZATION") {
+
+            localStorage.setItem("organization", JSON.stringify(user));
+            navigate("/organization/dashboard");
 
         } else {
 

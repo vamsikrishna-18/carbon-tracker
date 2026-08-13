@@ -8,7 +8,6 @@ import {
   Trophy,
   PanelLeftClose,
   PanelLeftOpen,
-  X,
   LifeBuoy,
   Target,
 } from "lucide-react";
@@ -132,30 +131,10 @@ function UserSidebar({ collapsed, setCollapsed, onClose }) {
             </h1>
           )}
 
-          {/* MOBILE CLOSE BUTTON — only rendered inside the mobile drawer,
-              where UserLayout passes a real onClose handler */}
-
-          {onClose && (
-            <button
-              onClick={onClose}
-              className="
-                p-2
-                rounded-lg
-                text-gray-700
-                dark:text-gray-200
-                hover:bg-red-100
-                dark:hover:bg-red-900/30
-                hover:text-red-600
-                dark:hover:text-red-400
-                transition
-                flex-shrink-0
-              "
-              title="Close menu"
-              aria-label="Close menu"
-            >
-              <X size={22} />
-            </button>
-          )}
+          {/* The mobile drawer's close (X) button has been removed here
+              since a separate close control already exists outside this
+              component (top-left). `onClose` is still passed down and used
+              below so tapping a nav item still dismisses the drawer. */}
 
         </div>
 
