@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 import {
   Search,
@@ -18,6 +18,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import LanguageDropdown from "../common/LanguageDropdown";
 import GoogleTranslate from "../common/GoogleTranslate";
+import { ThemeContext } from "../../context/ThemeContext";
 
 import {
   getNotifications,
@@ -26,6 +27,7 @@ import {
 
 function UserNavbar({ onMenuClick }) {
   const navigate = useNavigate();
+  const { darkMode, setDarkMode } = useContext(ThemeContext);
 
   const [user, setUser] = useState(() => {
     try {
@@ -42,10 +44,6 @@ function UserNavbar({ onMenuClick }) {
   const [showProfile, setShowProfile] = useState(false);
 
   const [notifications, setNotifications] = useState([]);
-
-  const [darkMode, setDarkMode] = useState(
-    localStorage.getItem("theme") === "dark"
-  );
 
   // Refs used to detect outside clicks / taps so dropdowns close
   // properly on both mobile (touch) and desktop (mouse)
@@ -196,17 +194,7 @@ function UserNavbar({ onMenuClick }) {
   // ============================================================
 
   const toggleTheme = () => {
-    const newTheme = !darkMode;
-
-    setDarkMode(newTheme);
-
-    if (newTheme) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
+    setDarkMode((currentTheme) => !currentTheme);
   };
 
   // ============================================================
@@ -268,7 +256,7 @@ function UserNavbar({ onMenuClick }) {
         min-w-0
         h-14
         sm:h-16
-        pl-16
+        px-3
         pr-3
         sm:pl-4
         sm:pr-4
@@ -292,8 +280,11 @@ function UserNavbar({ onMenuClick }) {
             flex
             items-center
             justify-center
-            -ml-12
-            sm:ml-0
+            w-10
+            h-10
+            rounded-lg
+            hover:bg-gray-100
+            dark:hover:bg-gray-800
             hover:text-green-600
             transition
           "

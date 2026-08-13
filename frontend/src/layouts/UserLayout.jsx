@@ -1,7 +1,6 @@
 import { useState } from "react";
 import UserSidebar from "../components/user/UserSidebar";
 import UserNavbar from "../components/user/UserNavbar";
-import { Menu, X } from "lucide-react";
 
 function UserLayout({ children }) {
 
@@ -11,43 +10,6 @@ function UserLayout({ children }) {
   return (
 
     <div className="min-h-screen w-full overflow-x-hidden">
-
-      {/* ================================================= */}
-      {/* MOBILE HAMBURGER BUTTON */}
-      {/* ================================================= */}
-
-      <button
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        aria-label="Toggle sidebar"
-        className="
-          lg:hidden
-          fixed
-          top-4
-          left-4
-          z-50
-
-          w-10
-          h-10
-
-          flex
-          items-center
-          justify-center
-
-          rounded-lg
-
-          bg-green-600
-          text-white
-
-          shadow-lg
-          shadow-green-600/20
-
-          active:scale-95
-
-          transition-all
-        "
-      >
-        {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
-      </button>
 
       {/* ================================================= */}
       {/* MOBILE OVERLAY */}

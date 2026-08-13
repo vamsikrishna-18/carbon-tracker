@@ -8,13 +8,21 @@
   overflow: hidden !important;
 }
 
-/* Hide Google's top translation bar */
+/* Google injects this iframe after a translation is selected. Keep it out of
+   the layout and cancel the inline body offset that it adds. */
+iframe.goog-te-banner-frame,
 .goog-te-banner-frame.skiptranslate {
   display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  width: 0 !important;
+  border: 0 !important;
+  pointer-events: none !important;
 }
 
 body {
   top: 0 !important;
+  margin-top: 0 !important;
 }
 
 /* Hide Google Translate branding/widget */
@@ -34,8 +42,5 @@ body {
 /* Prevent Google Translate from adding spacing */
 html {
   margin-top: 0 !important;
-}
-
-body {
-  margin-top: 0 !important;
+  top: 0 !important;
 }
