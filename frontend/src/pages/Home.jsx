@@ -73,14 +73,12 @@ function Home() {
       return;
     }
 
-    deferredPrompt.prompt();
+    await deferredPrompt.prompt();
 
     const { outcome } = await deferredPrompt.userChoice;
 
-    if (outcome === "accepted") {
-      setDeferredPrompt(null);
-      setShowInstall(false);
-    }
+    setDeferredPrompt(null);
+    setShowInstall(false);
   };
 
   // Hide the mobile install banner

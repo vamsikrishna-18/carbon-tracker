@@ -17,7 +17,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("${app.cors.allowed-origins:http://localhost:5173,http://localhost:4173,https://carbon-tracker-pulse.vercel.app}")
+    @Value("${app.cors.allowed-origins:http://localhost:5173,http://localhost:4173,https://carbon-tracker-pulse.vercel.app,https://carbon-tracker-ruddy.vercel.app}")
     private String allowedOrigins;
 
     @Value("${app.frontend.url:http://localhost:4173}")

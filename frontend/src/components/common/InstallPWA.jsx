@@ -58,7 +58,7 @@ function InstallPWA() {
       return;
     }
 
-    installPrompt.prompt();
+    await installPrompt.prompt();
 
     const { outcome } = await installPrompt.userChoice;
 
@@ -69,8 +69,9 @@ function InstallPWA() {
     setInstallPrompt(null);
   };
 
-  // Don't show the button after installation
-  if (installed) {
+  // The browser only exposes prompt() after beforeinstallprompt fires.
+  // Keeping the control hidden until then prevents a dead install banner.
+  if (installed || !installPrompt) {
     return null;
   }
 
